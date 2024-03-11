@@ -1,0 +1,600 @@
+#include <windows.h>
+#include <iostream>
+#include <vector>
+#include <cstdint>
+#include <fstream>
+#include <tchar.h>
+#include <iomanip>
+#include<string>
+// #include "Protocol.h"
+#include "Expected_data.h"
+
+using namespace std;
+ofstream MyFile("AssociationResponse.txt");
+ofstream PollResultFile("PollResultFile.cvc");
+
+uint8_t ahex[] = {0xE1,0x00,0x00,0x02,0x00,0x02,0x03,0x78,0x00,0x03,0x00,0x07,0x03,0x72,0x00,0x21
+,0x00,0x00,0x00,0x00,0x0C,0x16,0x03,0x68,0x00,0x03,0x03,0x09,0x3C,0x00,0xFF,0xFF
+,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0x00,0x01,0x00,0x06,
+0x00,0x00,
+0x00,0x01,0x03,0x50
+,0x00,0x00,
+
+0x00,0x0A,
+0x03,0x4A,
+0x84,0xD3,
+0x00,0x08,0x00,0x54,0x09,0x21,0x00,0x02
+,0x84,0xD3,0x09,0x2F,0x00,0x04,0x00,0x01,0x00,0x06,0x09,0x3F,0x00,0x0C,0x00,0x00
+,0x01,0x00,0x00,0x01,0x22,0x80,0x00,0x00,0x00,0x00,0x09,0x24,0x00,0x04,0x81,0x4C
+,0x54,0x32,0x09,0x27,0x00,0x10,0x00,0x0E,0x00,0x64,0x00,0x46,0x00,0x48,0x00,0x52
+,0x00,0x31,0x00,0x20,0x00,0x00,0x09,0x17,0x00,0x02,0x03,0x00,0x09,0x11,0x00,0x02
+,0x00,0x0B,0x09,0x50,0x00,0x0A,0xF0,0xCF,0x04,0x00,0x0A,0xA0,0xFE,0x00,0x36,0xC9
+,0x85,0x33,0x00,0x08,0x00,0x54,0x09,0x21,0x00,0x02,0x85,0x33,0x09,0x2F,0x00,0x04
+,0x00,0x01,0x00,0x06,0x09,0x3F,0x00,0x0C,0x00,0x00,0x20,0x00,0x00,0x01,0x42,0x28
+,0x00,0x00,0x00,0x00,0x09,0x24,0x00,0x04,0x00,0x02,0xF0,0xD4,0x09,0x27,0x00,0x10
+,0x00,0x0E,0x00,0x54,0x00,0x6F,0x00,0x63,0x00,0x6F,0x00,0x20,0x00,0x20,0x00,0x00
+,0x09,0x17,0x00,0x02,0x03,0x00,0x09,0x11,0x00,0x02,0x00,0x02,0x09,0x50,0x00,0x0A
+,0xF0,0xD4,0x04,0x00,0x02,0x00,0xFF,0x00,0x00,0x91,0x86,0x25,0x00,0x09,0x00,0x5A
+,0x09,0x21,0x00,0x02,0x86,0x25,0x09,0x2F,0x00,0x04,0x00,0x01,0x00,0x06,0x09,0x3F
+,0x00,0x0C,0x00,0x00,0x20,0x00,0x00,0x01,0x42,0x28,0x00,0x00,0x00,0x00,0x09,0x24
+,0x00,0x04,0x00,0x02,0x4B,0xB8,0x09,0x27,0x00,0x10,0x00,0x0E,0x00,0x53,0x00,0x70
+,0x00,0x4F,0x20,0x82,0x00,0x20,0x00,0x20,0x00,0x00,0x09,0x17,0x00,0x02,0x03,0x00
+,0x09,0x11,0x00,0x02,0x00,0x06,0xF0,0x08,0x00,0x02,0x06,0xD1,0x09,0x50,0x00,0x0A
+,0x4B,0xB8,0x04,0x00,0x02,0x20,0xFF,0x00,0x03,0xB6,0x86,0x2B,0x00,0x07,0x00,0x4E
+,0x09,0x21,0x00,0x02,0x86,0x2B,0x09,0x2F,0x00,0x04,0x00,0x01,0x00,0x06,0x09,0x3F
+,0x00,0x0C,0x00,0x00,0x20,0x00,0x00,0x01,0x42,0x28,0x00,0x00,0x00,0x00,0x09,0x24
+,0x00,0x04,0x00,0x02,0x48,0x22,0x09,0x27,0x00,0x10,0x00,0x0E,0x00,0x50,0x00,0x75
+,0x00,0x6C,0x00,0x73,0x00,0x65,0x00,0x20,0x00,0x00,0x09,0x11,0x00,0x02,0x00,0x06
+,0x09,0x50,0x00,0x0A,0x48,0x22,0x04,0x00,0x0A,0xA0,0x00,0x00,0x00,0x3C,0x86,0x2F
+,0x00,0x08,0x00,0x54,0x09,0x21,0x00,0x02,0x86,0x2F,0x09,0x2F,0x00,0x04,0x00,0x01
+,0x00,0x06,0x09,0x3F,0x00,0x0C,0x00,0x00,0x20,0x00,0x00,0x01,0x42,0x28,0x00,0x00
+,0x00,0x00,0x09,0x24,0x00,0x04,0x00,0x02,0x4B,0xB0,0x09,0x27,0x00,0x10,0x00,0x0E
+,0x00,0x50,0x00,0x65,0x00,0x72,0x00,0x66,0x00,0x20,0x00,0x20,0x00,0x00,0x09,0x17
+,0x00,0x02,0x02,0x01,0x09,0x11,0x00,0x02,0x00,0x06,0x09,0x50,0x00,0x0A,0x4B,0xB0
+,0x04,0x00,0x02,0x00,0xFF,0x00,0x00,0x64,0x86,0x4A,0x00,0x0A,0x00,0x82,0x09,0x21
+,0x00,0x02,0x86,0x4A,0x09,0x2F,0x00,0x04,0x00,0x01,0x00,0x06,0x09,0x3F,0x00,0x0C
+,0x00,0x00,0x20,0x00,0x00,0x01,0x52,0x28,0x01,0x03,0x00,0x00,0x09,0x24,0x00,0x04
+,0x00,0x02,0x4A,0x04,0x09,0x27,0x00,0x10,0x00,0x0E,0x00,0x4E,0x00,0x42,0x00,0x50
+,0x00,0x20,0x00,0x20,0x00,0x20,0x00,0x00,0x09,0x11,0x00,0x02,0x00,0x01,0x09,0x90
+,0x00,0x08,0x20,0x24,0x03,0x08,0x09,0x59,0x49,0x00,0xF2,0x37,0x00,0x04,0xFF,0xFF
+,0xFF,0xFF,0xF9,0x98,0x00,0x04,0x01,0xC4,0xBB,0x00,0x09,0x4B,0x00,0x22,0x00,0x03
+,0x00,0x1E,0x4A,0x05,0x04,0x00,0x0F,0x20,0x00,0x00,0x00,0x78,0x4A,0x06,0x04,0x00
+,0x0F,0x20,0x00,0x00,0x00,0x50,0x4A,0x07,0x04,0x00,0x0F,0x20,0x00,0x00,0x00,0x5A
+,0x86,0x78,0x00,0x05,0x00,0x3A,0x09,0x21,0x00,0x02,0x86,0x78,0x09,0x2F,0x00,0x04
+,0x00,0x01,0x00,0x06,0x09,0x3F,0x00,0x0C,0x00,0x00,0x20,0x00,0x00,0x01,0x42,0x28
+,0x01,0x03,0x00,0x00,0x09,0x24,0x00,0x04,0x00,0x02,0xF0,0xEA,0x09,0x27,0x00,0x10
+,0x00,0x0E,0x00,0x46,0x00,0x4D,0x00,0x50,0x00,0x20,0x00,0x20,0x00,0x20,0x00,0x00
+,0x86,0x79,0x00,0x05,0x00,0x3A,0x09,0x21,0x00,0x02,0x86,0x79,0x09,0x2F,0x00,0x04
+,0x00,0x01,0x00,0x06,0x09,0x3F,0x00,0x0C,0x00,0x00,0x20,0x00,0x00,0x01,0x42,0x28
+,0x01,0x03,0x00,0x00,0x09,0x24,0x00,0x04,0x81,0x4C,0x54,0x13,0x09,0x27,0x00,0x10
+,0x00,0x0E,0x00,0x46,0x00,0x4D,0x00,0x50,0x00,0x31,0x00,0x20,0x00,0x20,0x00,0x00
+,0x86,0x7A,0x00,0x05,0x00,0x3A,0x09,0x21,0x00,0x02,0x86,0x7A,0x09,0x2F,0x00,0x04
+,0x00,0x01,0x00,0x06,0x09,0x3F,0x00,0x0C,0x00,0x00,0x20,0x00,0x00,0x01,0x42,0x28
+,0x01,0x03,0x00,0x00,0x09,0x24,0x00,0x04,0x81,0x4C,0x54,0x15,0x09,0x27,0x00,0x10
+,0x00,0x0E,0x00,0x46,0x00,0x4D,0x00,0x50,0x00,0x32,0x00,0x20,0x00,0x20,0x00,0x00
+,0x86,0x7B,0x00,0x05,0x00,0x3A,0x09,0x21,0x00,0x02,0x86,0x7B,0x09,0x2F,0x00,0x04
+,0x00,0x01,0x00,0x06,0x09,0x3F,0x00,0x0C,0x00,0x00,0x20,0x00,0x00,0x01,0x42,0x28
+,0x01,0x03,0x00,0x00,0x09,0x24,0x00,0x04,0x81,0x4C,0x54,0x17,0x09,0x27,0x00,0x10
+,0x00,0x0E,0x00,0x46,0x00,0x4D,0x00,0x50,0x00,0x33,0x00,0x20,0x00,0x20,0x00,0x00
+};
+
+/*
++--------+                                   +--------+
+| Client |                                   | Server |
+|   PC   |                                   |  ECG   |
+|        |----- Association Request ----->   |        |
+|        |                                   |        |
+|        |   <--------- Association Result --|        |
+|        |                                   |        |
+|        |   <------ MDS Create Event Report |        |
+|        |                                   |        |
+|        |-- MDS Create Event Result ---->   |        |
+|        |                                   |        |
+|        |-- Poll Data Request ---------->   |        |
+|        |                                   |        |
+|        |   <--------- Poll Data Response --|        |
+|        |                                   |        |
+|        |                  ...              |        |
+|        |                                   |        |
+|        |        (Data Exchange Continues)  |        |
+|        |                                   |        |
+|        |                  ...              |        |
+|        |                                   |        |
+|        |-- Association Release Request --> |        |
+|        |                                   |        |
+|        |  <-- Association Release Result --|        |
++--------+                                   +--------+
+*/
+/*
+                *********** FRAMING********
+
+BOF Beginning Of Frame (0xC0)
+Hdr Header Information
+User Data Association Control or Data Export Command message
+FCS 16 bit Frame Check Sequence using CRC-CCITT algorithm
+EOF End Of Frame (0xC1)
+
+
+Hdr Header Information
+    For Association Req -   {BOF,0x11,0x01,0x00,0xee,USERDATA ,0XE8,0X50,0XC1}
+    For MDSCreateEventResult - {BOF, 0x11,0x01,0x00,0x1C,USERDATA, 0x39,0x17,EOF}    
+    For SinglePollDataRequest - {BOF, 0xC0, 0x11,0x01,0x00,0x24,USERDATA,0xF8,0x48,EOF}                                           øHÁ
+
+    NOTE - The contents of the Hdr and User Data fields is unrestricted. This can lead to problems if a BOF or 
+EOF character appear in the Hdr, User Data, or FCS field. A Control Escape byte is defined as 0x7D. 
+The sender must examine each byte in the User Data and FCS fields; for each byte with the value 
+0xC0, 0xC1, 0x7D it does the following:
+• insert a 0x7D byte proceeding the byte
+• complement bit 5 of the byte (XOR with 0x20).
+
+
+
+
+*/
+/*
+
+
+                     ***** UserData Structure ******
+ASNLength length : 72 {0x48}
+
+****MDSEUserInfoStd***
+
+ProtocolVersion protocol_version : MDDL_VERSION1
+NomenclatureVers.nomenclature_version : NOMEN_VERSION
+FunctionalUnits functional_units : 0
+SystemType system_type : SYST_CLIENT
+StartupMode startup_mode : COLD_START
+ {0x80 0x00 0x00 0x00 0x40 0x00 0x00 0x00 
+ 0x00 0x00 0x00 0x00 0x80 0x00 0x00 0x00 
+ 0x20 0x00 0x00 0x00}
+
+***Option List*** 
+
+AttributeList count : 0
+ length : 0
+ {0x00 0x00 0x00 0x00}
+
+***Supported Profiles***
+
+AttributeList count : 1
+ length : 44
+ {0x00 0x01 0x00 0x2c}
+
+***AVAType***
+
+OIDType attribute_id : NOM_POLL_PROFILE_SUPPORT
+u_16 length : 40
+ {0x00 0x01 0x00 0x28} 
+
+
+***PollProfileSupport (attribute_val)***
+
+PollProfileRev. poll_profile_revision : POLL_PROFILE_REV_0 
+RelativeTime min_poll_period : 800000
+u_32 max_mtu_rx : 1000
+u_32 max_mtu_tx : 1000
+u_32 max_bw_tx : 0xffff 0xffff
+PollProfileOpt. options : 0x6000 0x0000
+ {0x80 0x00 0x00 0x00 0x00 0x00 0x09 0xc4 
+ 0x00 0x00 0x09 0xc4 0x00 0x00 0x03 0xe8 
+ 0xff 0xff 0xff 0xff 0x60 0x00 0x00 0x00}
+
+
+***Optional Packages***
+AttributeList count : 1
+length : 12
+ {0x00 0x01 0x00 0x0c} 
+
+***AVAType*** 
+OIDType attribute_id : NOM_ATTR_POLL_PROFILE_EXT
+u_16 length : 8 
+ {0xf0 0x01 0x00 0x08}
+
+***PollProfileExt (attribute_val)***
+
+PollProfileExtOpt.options : POLL_EXT_PERIOD_NU_AVG_60SEC
+AttributeList count : 0
+ length : 0
+ {0x20 0x00 0x00 0x00 0x00 0x00 0x00 0x00}
+ 
+With this User Data, the length field of the Presentation Header must be set to 220 (0xDC) and the 
+length field of the Session Header must be set to 236 (0xEC)
+
+*/
+
+uint16_t swap16(uint16_t value) {
+    return (value >> 8) | (value << 8);
+}
+
+uint32_t swap32(uint32_t value) {
+    return ((value >> 24) & 0xff) |
+           ((value << 8) & 0xff0000) |
+           ((value >> 8) & 0xff00) |
+           ((value << 24) & 0xff000000);
+}
+uint64_t swap64(uint64_t value) {
+    return ((value >> 56) & 0x00000000000000FF) |
+           ((value << 40) & 0x00FF000000000000) |
+           ((value >> 24) & 0x000000FF00000000) |
+           ((value << 8)  & 0x0000FF0000000000) |
+           ((value >> 8)  & 0x00000000FF000000) |
+           ((value << 24) & 0x0000000000FF0000) |
+           ((value >> 40) & 0x000000000000FF00) |
+           ((value << 56) & 0xFF00000000000000);
+}
+
+// uint8_t AssocReqSessionHeader[];
+ struct AVAType
+ {
+    // uint16_t OIDType;
+    uint16_t attribute_id;
+    uint16_t length;
+    uint16_t attribute_val;
+} ;
+ struct AttributeList{
+    uint16_t count;
+    uint16_t length;
+    struct AVAType avatype[]; 
+ 
+} ;
+ struct MDSEUserInfoStd {
+
+ uint32_t protocol_version : 32 ; 
+ uint32_t nomenclature_version :32;
+ uint32_t functional_units :32;
+ uint32_t system_type :32;
+ uint32_t startup_mode :32;
+
+} ;
+
+
+struct AssocReqUserData{
+    uint8_t ASMLength: 8 ; 
+
+    struct MDSEUserInfoStd MDSEUserInfoStd_T;
+    
+    struct AttributeList OptionList;
+    struct AttributeList SupportedProfiles;
+
+   
+   uint32_t PollProfileRevision = POLL_PROFILE_REV_0;
+   uint32_t RelativeTime = 800000;
+    uint32_t max_mtu_rx = 1000;
+    uint32_t max_mtu_tx = 1000;
+    uint32_t max_bw_tx = 0xffffffff;
+    uint32_t PollProfileOptions =  0x60000000;
+    struct AVAType ;      ///#define NOM_ATTR_POLL_PROFILE_EXT 61441
+                            /* id for poll profile extensions opt. package */
+
+    uint32_t PollProfileExtOptions = POLL_EXT_PERIOD_NU_1SEC ;
+    AttributeList PollProfileExtOptoptions{0,0};
+   
+
+} ;
+/*********************************Parsing SINGLE POLL DATA RESULT ***************/
+struct SPpdu
+{
+    uint16_t session_id;
+    uint16_t p_context_id;
+};
+struct ROapdus
+{
+    uint16_t ro_type;
+    uint16_t length;
+};
+struct RorlsId
+{
+    uint16_t state;
+    uint16_t count;
+    uint16_t invoke_id;
+    uint16_t CMDType;
+    uint16_t length;
+
+};
+struct ActionResult
+{
+    uint16_t m_obj_class;
+    uint16_t MdsContext;
+    uint16_t Handle;
+    uint16_t action_type;
+    uint16_t length;
+
+
+};
+struct RORSapdu
+{
+    uint16_t invoke_id;
+    uint16_t CMDType;
+    uint16_t length;
+
+
+};
+struct ManagedObjectId
+{
+    uint16_t m_obj_class;
+    uint16_t MdsContext;
+    uint16_t Handle;
+ 
+};
+ struct TYPE {
+   
+} ;
+
+ struct __attribute__((packed)) PollMdibDataReply
+ {
+    uint16_t poll_number;
+    uint32_t rel_time_stamp;
+    uint64_t abs_time_stamp;
+    uint16_t partition;
+    uint16_t code;
+    uint16_t polled_attr_grp;
+    
+} ;
+
+struct ObservationPoll{
+    uint16_t obj_handle;
+    struct AttributeList attributes;
+} ;
+struct __attribute__((packed)) SingleContextPoll{
+    uint16_t context_id;
+    struct __attribute__((packed)) poll_info{
+        uint16_t count;
+        uint16_t length;
+        struct ObservationPoll value[];
+    }info ;
+} ;
+struct __attribute__((packed)) PollInfoList
+{
+    uint16_t count;
+    uint16_t length;
+    struct SingleContextPoll value[]; 
+};
+
+struct __attribute__((packed)) SinglePollDataResult
+{
+
+    struct SPpdu SPpdu1;
+    struct ROapdus ROapdus1;
+    struct RORSapdu RorlsId1;
+    struct ActionResult ActionResult1;
+
+    struct PollMdibDataReply  pollMdibDataReply;
+    struct PollInfoList pollInfoList;
+    
+    
+
+}*SinglePollDataResultPointer;
+std::vector<uint8_t> PollResult;
+
+void ReadPollValues()   //Read the poll result (incomplete) 
+{
+    PollResult.erase(PollResult.begin(), PollResult.begin() + 5);
+    PollResult.erase(PollResult.end() - 3, PollResult.end());
+    uint16_t PollResultSize = size(PollResult);
+    printf("size of poll result %d\n",PollResultSize); 
+    // printf("last bit 0x%x \n",PollResult[PollResultSize-1]);
+
+  //  if (PollResult.size() >= sizeof(SinglePollDataResult)) 
+  if(1)
+    {
+    //    SinglePollDataResultPointer = reinterpret_cast<SinglePollDataResult*>(PollResult.data());
+        SinglePollDataResultPointer = reinterpret_cast<SinglePollDataResult*>(&ahex);
+
+    // printf("PollInfoList.ObservationPoll: %u\n", swap16(SinglePollDataResultPointer->SPpdu1.p_context_id));
+     printf("SPpdu.session_id: %x\n", swap16(SinglePollDataResultPointer->SPpdu1.session_id));
+     // Initialization and assignments as necessary
+
+    // printf("SPpdu.session_id: %x\n", swap16(SinglePollDataResultPointer->SPpdu1.session_id));
+    printf("SPpdu.p_context_id: %x\n", swap16(SinglePollDataResultPointer->SPpdu1.p_context_id));
+    
+    printf("ROapdus.ro_type: %x\n", swap16(SinglePollDataResultPointer->ROapdus1.ro_type));
+    printf("ROapdus.length: %x\n", swap16(SinglePollDataResultPointer->ROapdus1.length));
+    
+    printf("RORSapdu.invoke_id: %x\n", swap16(SinglePollDataResultPointer->RorlsId1.invoke_id));
+    printf("RORSapdu.CMDType: %x\n", swap16(SinglePollDataResultPointer->RorlsId1.CMDType));
+    printf("RORSapdu.length: %x\n", swap16(SinglePollDataResultPointer->RorlsId1.length));
+    
+    printf("ActionResult.m_obj_class: %x\n", swap16(SinglePollDataResultPointer->ActionResult1.m_obj_class));
+    printf("ActionResult.MdsContext: %x\n", swap16(SinglePollDataResultPointer->ActionResult1.MdsContext));
+    printf("ActionResult.Handle: %x\n", swap16(SinglePollDataResultPointer->ActionResult1.Handle));
+    printf("ActionResult.action_type: %x\n", swap16(SinglePollDataResultPointer->ActionResult1.action_type));
+    printf("ActionResult.length: %x\n", swap16(SinglePollDataResultPointer->ActionResult1.length));
+    
+    printf("PollMdibDataReply.poll_number: %x\n", swap16(SinglePollDataResultPointer->pollMdibDataReply.poll_number));
+    printf("PollMdibDataReply.rel_time_stamp: %x\n", swap32(SinglePollDataResultPointer->pollMdibDataReply.rel_time_stamp));
+    printf("PollMdibDataReply.abs_time_stamp: %llx\n", swap64(SinglePollDataResultPointer->pollMdibDataReply.abs_time_stamp));
+    printf("PollMdibDataReply.partition: %x\n", swap16(SinglePollDataResultPointer->pollMdibDataReply.partition));
+    printf("PollMdibDataReply.code: %x\n", swap16(SinglePollDataResultPointer->pollMdibDataReply.code));
+    printf("PollMdibDataReply.polled_attr_grp: %x\n", swap16(SinglePollDataResultPointer->pollMdibDataReply.polled_attr_grp));
+    int TotalSinglePoll = swap16(SinglePollDataResultPointer->pollInfoList.count);
+    printf("PollInfoList.count: %x\n", TotalSinglePoll);
+    printf("PollInfoList.length: %x\n", swap16(SinglePollDataResultPointer->pollInfoList.length));
+    for(int i = 0 ; i<TotalSinglePoll; i++)
+    {
+        
+        printf("PollInfoList.value[%d].context_id: %x\n",i, swap16(SinglePollDataResultPointer->pollInfoList.value[i].context_id));
+        int TotalPollinfoList = swap16(SinglePollDataResultPointer->pollInfoList.value[i].info.count);
+        printf("PollInfoList.value[%d].info.count: %x\n",i, TotalPollinfoList);
+        printf("PollInfoList.value[%d].info.length: %x\n",i, swap16(SinglePollDataResultPointer->pollInfoList.value[i].info.length));
+        for(int j = 0 ; j<TotalPollinfoList; j++)
+        {
+        
+            printf("PollInfoList.value[%d].info.value[%d].objhandle: %x\n", swap16(SinglePollDataResultPointer->pollInfoList.value[i].info.value[j].obj_handle));
+            int TotalAttributeCount = swap16(SinglePollDataResultPointer->pollInfoList.value[i].info.value[j].attributes.count);
+            printf("PollInfoList.value[%d].info.value[%d].attribute.count: %x\n", TotalAttributeCount);
+            printf("PollInfoList.value[%d].info.value[%d].attrubute.length: %x\n", i,j,swap16(SinglePollDataResultPointer->pollInfoList.value[i].info.value[j].attributes.length));
+            for(int k = 0; k< TotalAttributeCount; k++)
+            {
+
+                printf("PollInfoList.value[%d].info.value[%d].attributes.avatype.attribute_id: %x\n",i,j, swap16(SinglePollDataResultPointer->pollInfoList.value[i].info.value[j].attributes.avatype.attribute_id));
+                printf("PollInfoList.value[%d].info.value[%d].attributes.avatype.length: %x\n",i,j, swap16(SinglePollDataResultPointer->pollInfoList.value[i].info.value[j].attributes.avatype.length));
+                printf("PollInfoList.value[%d].info.value[%d].attributes.avatype.attribute_val: %x\n",i,j, swap16(SinglePollDataResultPointer->pollInfoList.value[i].info.value[j].attributes.avatype.attribute_val));
+        
+            }
+            
+
+        }
+   }
+
+    
+
+            // printf("\n 0x%x \n", SinglePollDataResultPointer->SPpdu1.session_id);
+    } 
+   else
+    {
+        printf("PollResult does not contain enough data for SinglePollDataResult.\n");
+    }
+}
+
+
+
+
+
+/*           ************* END OF DATA STUCTURES ***************/
+
+HANDLE hSerial ;
+void IsHandle(LPCSTR COM)
+{
+    hSerial = CreateFileA(COM,
+                            GENERIC_READ | GENERIC_WRITE,
+                            0,
+                            0,
+                            OPEN_EXISTING,
+                            FILE_ATTRIBUTE_NORMAL,
+                            0);
+    if (hSerial == INVALID_HANDLE_VALUE) {
+    std::cerr << "Error opening serial port" << std::endl;
+    }
+}
+void Init_COM()
+{
+    DCB dcbSerialParams = {0};
+    dcbSerialParams.DCBlength = sizeof(dcbSerialParams);
+    if (!GetCommState(hSerial, &dcbSerialParams)) {
+        // Error getting current serial parameters
+        std::cerr << "Error getting serial port state" << std::endl;
+    }
+    dcbSerialParams.BaudRate = 115200;
+    dcbSerialParams.ByteSize = 8;
+    dcbSerialParams.StopBits = ONESTOPBIT;
+    dcbSerialParams.Parity = NOPARITY;
+ 
+    if (!SetCommState(hSerial, &dcbSerialParams)) {
+        // Error setting serial parameters
+        std::cerr << "Error setting serial port state" << std::endl;
+    }
+    COMMTIMEOUTS timeouts = {0};
+    timeouts.ReadIntervalTimeout = 50;
+    timeouts.ReadTotalTimeoutConstant = 50;
+    timeouts.ReadTotalTimeoutMultiplier = 10;
+    timeouts.WriteTotalTimeoutConstant = 50;
+    timeouts.WriteTotalTimeoutMultiplier = 10;
+    if (!SetCommTimeouts(hSerial, &timeouts)) 
+    {
+        // Error setting timeouts
+        std::cerr << "Error setting serial timeouts" << std::endl;
+    }
+}
+void writedata(const std::vector<uint8_t> combinedVec) // Send data to COM3
+{
+    PurgeComm(hSerial, PURGE_RXCLEAR | PURGE_TXCLEAR);
+    DWORD bytesSent;
+    if (!WriteFile(hSerial, combinedVec.data(), combinedVec.size(), &bytesSent, NULL)) {
+            printf("Failed to send association request\n");
+            CloseHandle(hSerial);
+    }
+    else 
+    {
+        printf("sizeofdata: %d, data : %bytesSent: %d\n", combinedVec.size(), bytesSent);
+    }
+}
+void read_data(HANDLE hSerial, uint8_t IsPollResult = false)
+{
+
+    BYTE buffer[1024];
+    DWORD bytesRead;
+    // int temp = 0;
+    PurgeComm(hSerial, PURGE_RXCLEAR | PURGE_TXCLEAR);
+    ZeroMemory(buffer, sizeof(buffer)); // Clear the buffer before reading
+
+    
+    if (ReadFile(hSerial, buffer, sizeof(buffer), &bytesRead, NULL)) 
+    {
+        printf("\nBytes Read: %lu\n", bytesRead); 
+
+       for (DWORD i = 0; i < bytesRead; ++i) 
+        {
+            if(IsPollResult)
+            {
+                PollResult.push_back(buffer[i]);
+            }       
+            MyFile << "0x" << std::hex << std::uppercase << std::setw(2) << std::setfill('0') << static_cast<int>(buffer[i]) << ",";
+            if ((i + 1) % 16 == 0) MyFile << std::endl; 
+           //printf("%02x ", buffer[i]);   
+
+          //  if(buffer[i]== 0xc1)MyFile << std::endl<<std::endl; 
+
+        }
+      
+
+        printf("\nBytes Read: %lu\n", bytesRead); 
+        MyFile<<endl;
+         MyFile  << std::endl; 
+         MyFile  << std::endl; 
+
+    }
+    else 
+    {
+        printf("Error reading from COM port.\n");
+    }
+}
+std::vector<uint8_t> combinedVec;
+void CombineVec()
+{
+
+
+    combinedVec.insert(combinedVec.end(), AssocReqSessionHeader.begin(), AssocReqSessionHeader.end());
+    combinedVec.insert(combinedVec.end(), AssocReqSessionData.begin(), AssocReqSessionData.end());
+    combinedVec.insert(combinedVec.end(), AssocReqPresentationHeader.begin(), AssocReqPresentationHeader.end());
+    combinedVec.insert(combinedVec.end(), AssocReqSessionData.begin(),AssocReqSessionData.end());
+    combinedVec.insert(combinedVec.end(), AssocReqTrailer.begin(), AssocReqTrailer.end());
+
+    for (int i = 0; i< combinedVec.size();i++) {
+       // printf("0x%x ",combinedVec[i]);
+
+    }
+    return ;
+}
+int main(void)
+{
+    // IsHandle("COM3");   // initializing the COM TO COM3
+    // Init_COM(); // CONFIGURING THE COM3
+
+    // vector<uint8_t> temp = {0x00};
+    // CombineVec();
+    // writedata(CombinedAssoReq); // Sending the combined Association Request
+    // read_data(hSerial); // Reading the combined Association Response and MDS Create Response
+    // writedata(MDSCreateEvent);  // Sending the MDS Create Event Result
+    // read_data(hSerial); 
+    // writedata(SinglePollDataRequest); // Sending the MDS Single Poll DataRequest
+    // read_data(hSerial,true); // Reading the MDS Single Poll DataRequest
+    ReadPollValues();
+    while(0)
+    {
+      
+        writedata(SinglePollDataRequest); // Sending the MDS Single Poll DataRequest
+        read_data(hSerial,true); // Reading the MDS Single Poll DataRequest
+        ReadPollValues();
+        
+        
+        Sleep(1000);
+        
+    }
+
+    
+    writedata(ReleaseRequest); // Sending the MDS Single Poll DataRequest
+    // read_data(hSerial);
+    CloseHandle(hSerial);                                                                           
+    return 0;
+
+}
