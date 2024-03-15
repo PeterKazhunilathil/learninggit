@@ -1,4 +1,3 @@
-//water
 
 #include <windows.h>
 #include <iostream>
